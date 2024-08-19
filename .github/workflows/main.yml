@@ -27,4 +27,4 @@ jobs:
     - name: create image
       working-directory: docker-project
       run:
-        ./gradlew buildDgocker 
+        ./gradlew buildDocker
