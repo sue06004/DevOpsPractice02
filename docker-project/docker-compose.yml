@@ -1,0 +1,10 @@
+version: '3'
+services:
+  app:
+    image: sue06004/backend:${DOCKER_IMAGE_TAG}
+    ports:
+      - '8080:8080'
+  frontend:
+    image: sue06004/frontend:${DOCKER_IMAGE_TAG}
+    ports:
+      - '80:80'

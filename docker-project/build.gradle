@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.2'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.palantir.docker' version '0.36.0'
+}
+
+group = 'org.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+def platform = project.hasProperty('platform') ? project.property('platform') : "frontend"
+
+docker{ // 이미지 생성
+    if (platform == 'frontend') {
+        name 'sue06004/frontend:' + version
+        files 'frontend/dist'
+        buildArgs(['DIST_DIR': '/'])
+        dockerfile file('Dockerfile.frontend')
+    } else{
+        name "sue06004/backend:" + version
+        files tasks.bootJar.outputs.files
+        buildArgs(['JAR_FILE': tasks.bootJar.outputs.files.singleFile.name]) // JAR_FILE이라는 변수에 bootJar해서 생기는 파일 이름 저장
+        dockerfile file('Dockerfile') //프로젝트 최상단 기준으로 경로 입력
+    }
+}
+
+task buildDocker(type: Exec){
+    workingDir project.rootDir
+    commandLine 'gradlew.bat', 'docker','-Pplatform=backend'
+}
+
+
+task dockerComposeUp(type: Exec, dependsOn: buildDocker){ // 컨테이너 실행, dependsOn - 설정된거 실행되고 자기자신을 실행
+    environment 'DOCKER_IMAGE_TAG', version
+    commandLine 'docker-compose', 'up', '--build', '-d'
+}
+
+
+task buildFrontend(type: Exec) {
+    workingDir 'frontend'
+    commandLine 'C:\\Program Files\\nodejs\\npm.cmd', 'run', 'build'
+}
+
+task buildDockerFrontend(type: Exec, dependsOn: buildFrontend) {
+    workingDir project.rootDir
+    commandLine 'cmd', '/c', 'gradlew.bat', 'docker'
+}
+
+task dockerComposeUpFrontend(type: Exec, dependsOn: buildDockerFrontend){
+    environment 'DOCKER_IMAGE_TAG', version
+    commandLine 'docker-compose', 'up', '--build', '-d'
+}
