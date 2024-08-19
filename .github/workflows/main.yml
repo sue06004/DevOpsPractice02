@@ -49,7 +49,7 @@ jobs:
         password: ${{ secrets.REMOTE_SSH_PASSWORD }}
         port: 8219
         script: |
-          kubectl apply -f - <<EOF
+          sudo kubectl apply -f - <<EOF
           apiVersion: v1
           kind: Pod
           metadata:
