@@ -22,5 +22,5 @@ jobs:
     - name: Grant execute permission for gradlew
       working-directory: docker-project
       run: 
-        chmod +x gradlew
-        ./gradlew buildDocker
+        chmod +x ./gradlew
+        ./gradlew docker buildDocker
