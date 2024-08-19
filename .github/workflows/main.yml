@@ -56,6 +56,6 @@ jobs:
             name: backend
           spec:
             containers:
-            - name: backend
-              image: sue06004/backend:0.0.1-SNAPSHOT
+              - name: backend
+                image: sue06004/backend:0.0.1-SNAPSHOT
           EOF
