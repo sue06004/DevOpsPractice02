@@ -40,3 +40,13 @@ jobs:
     - name: Push image into Docker Hub
       run:
         docker push sue06004/backend:0.0.1-SNAPSHOT
+
+    - name: ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.REMOTE_IP }}
+        username: ${{ secrets.REMOTE_SSH_ID }}
+        password: ${{ secrets.REMOTE_SSH_PASSWORD }}
+        port: ${{ secrets.REMOTE_SSH_PORT }}
+        script: |
+          echo 1
