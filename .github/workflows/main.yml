@@ -49,4 +49,13 @@ jobs:
         password: ${{ secrets.REMOTE_SSH_PASSWORD }}
         port: 8219
         script: |
-          echo 1
+          kubectl apply -f - <<EOF
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: backend
+          spec:
+            containers:
+              - name: backend
+            image: sue06004/backend:0.0.1-SNAPSHOT
+          EOF
