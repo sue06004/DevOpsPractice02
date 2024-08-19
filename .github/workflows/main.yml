@@ -47,6 +47,6 @@ jobs:
         host: ${{ secrets.REMOTE_IP }}
         username: ${{ secrets.REMOTE_SSH_ID }}
         password: ${{ secrets.REMOTE_SSH_PASSWORD }}
-        port: ${{ secrets.REMOTE_SSH_PORT }}
+        port: 8219
         script: |
           echo 1
